@@ -8,7 +8,6 @@ on:
 
 env:
   IMAGE_NAME: animal-farm
-  APP_IMAGE_ID: ''
   APP_VERSION: ''
 
 jobs:
@@ -40,11 +39,10 @@ jobs:
           [ "$VERSION" == "main" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          echo APP_IMAGE_ID = echo $IMAGE_ID
           echo APP_VERSION = echo $VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
       - name: Log in to docker hub
         run: |
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-          docker push $APP_IMAGE_ID:$APP_VERSION
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME:$APP_VERSION
