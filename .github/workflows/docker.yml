@@ -42,7 +42,11 @@ jobs:
           echo APP_VERSION = echo $VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+      
       - name: Log in to docker hub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push image to docker hub
         run: |
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker tag $IMAGE_NAME $IMAGE_NAME:$VERSION
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME:$APP_VERSION
