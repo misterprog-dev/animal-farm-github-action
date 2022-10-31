@@ -40,8 +40,8 @@ jobs:
           [ "$VERSION" == "main" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          echo $IMAGE_ID >> $APP_IMAGE_ID
-          echo $VERSION >> $APP_VERSION
+          echo APP_IMAGE_ID = echo $IMAGE_ID
+          echo APP_VERSION = echo $VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
       - name: Log in to docker hub
