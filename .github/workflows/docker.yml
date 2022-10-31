@@ -8,7 +8,6 @@ on:
 
 env:
   IMAGE_NAME: animal-farm
-  APP_VERSION: ''
 
 jobs:
   build-and-push:
@@ -23,8 +22,10 @@ jobs:
       - name: Build image
         run: docker build . --file ./Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
-      - name: Log in to github registry
-        run: echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: Log in to github registry / docker hub
+        run: |
+          echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push image to github registry
         run: |
@@ -39,14 +40,9 @@ jobs:
           [ "$VERSION" == "main" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          echo APP_VERSION = echo $VERSION
+          echo "Image tagging"
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          echo "Push to github registry"
           docker push $IMAGE_ID:$VERSION
-      
-      - name: Log in to docker hub
-        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Push image to docker hub
-        run: |
-          docker tag $IMAGE_NAME $IMAGE_NAME:$VERSION
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME:$APP_VERSION
+          echo "Push to docker hub"
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_ID:$VERSION
