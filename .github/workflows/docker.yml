@@ -22,10 +22,8 @@ jobs:
       - name: Build image
         run: docker build . --file ./Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
-      - name: Log in to github registry / docker hub
-        run: |
-          echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Log in to github registry
+        run: echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
 
       - name: Push image to github registry
         run: |
@@ -44,5 +42,13 @@ jobs:
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           echo "Push to github registry"
           docker push $IMAGE_ID:$VERSION
+      
+      - name: Login to docker hub
+        run:  docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Push to docker hub
+        run: |
           echo "Push to docker hub"
-          docker push dsoumaila/$IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $IMAGE_NAME:$VERSION
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME:latest
+      
