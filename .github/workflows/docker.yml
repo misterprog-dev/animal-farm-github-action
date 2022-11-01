@@ -48,7 +48,8 @@ jobs:
       
       - name: Push to docker hub
         run: |
-          echo "Push to docker hub"
+          echo "Image tagging"
           docker tag $IMAGE_NAME $IMAGE_NAME:latest
+          echo "Push to docker hub"
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME:latest
       
