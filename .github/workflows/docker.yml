@@ -45,4 +45,5 @@ jobs:
           echo "Push to github registry"
           docker push $IMAGE_ID:$VERSION
           echo "Push to docker hub"
+          echo "${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_ID:$VERSION"
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_ID:$VERSION
