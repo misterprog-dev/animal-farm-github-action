@@ -50,6 +50,7 @@ jobs:
         run: |
           echo "Image tagging"
           docker tag $IMAGE_NAME $IMAGE_NAME:latest
+          docker search $IMAGE_NAME
           echo "Push to docker hub"
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME:latest
       
